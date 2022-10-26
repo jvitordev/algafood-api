@@ -9,27 +9,17 @@ import com.algaworks.algafood.di.notificacao.Notificador;
 @Component
 public class AtivacaoClienteService {
 
-	@Autowired
+	@Autowired(required = false)
 	private Notificador notificador;
-	
-	// Usado para definir o método construtor que deverá ser usado pelo Spring
-//	@Autowired
-//	public AtivacaoClienteService(Notificador notificador) {
-//		this.notificador = notificador;
-//	}
-
-//	public AtivacaoClienteService(String qualquer) {
-//		
-//	}
 	
 	public void activate(Cliente cliente) {
 		cliente.activate();
 		
-		notificador.notificar(cliente, "Seu cadastro no sistema está ativo!");
-	}
-
-//	@Autowired
-	public void setNotificador(Notificador notificador) {
-		this.notificador = notificador;
+		if (notificador != null) {
+			notificador.notificar(cliente, "Seu cadastro no sistema está ativo!");			
+		} else {
+			System.out.println("Não existe notificador, mas cliente foi ativado!");
+		}
+		
 	}
 }
