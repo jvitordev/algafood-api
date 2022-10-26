@@ -6,7 +6,7 @@ public class Cliente {
 	private String name;
 	private String email;
 	private String telefone;
-	private boolean active = false;
+	private boolean ativo = false;
 	
 	public Cliente(String name, String email, String telefone) {
 		this.name = name;
@@ -25,11 +25,11 @@ public class Cliente {
 		return telefone;
 	}
 
-	public boolean isActive() {
-		return active;
+	public boolean isAtivo() {
+		return ativo;
 	}
 
-	public void activate() {
-		this.active = true;
+	public void ativar() {
+		this.ativo = true;
 	}
 }
