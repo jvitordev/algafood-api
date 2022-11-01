@@ -1,7 +1,6 @@
 package com.algaworks.algafood.di.notificacao;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.algaworks.algafood.di.modelo.Cliente;
 
@@ -9,12 +8,13 @@ import com.algaworks.algafood.di.modelo.Cliente;
 @Component
 public class NotificadorEmail implements Notificador {
 
-	@Value("${exemplo.propriedade.spring}")
-	private String atributo;
+	@Autowired
+	private NotificadorProperties properties;
 	
 	@Override
 	public void notificar(Cliente cliente, String mensagem) {
-		System.out.println("A propriedade exemplo.propriedade.spring é igual a " + atributo);
+		System.out.println("Host: " + properties.getHostServidor());
+		System.out.println("Porta: " + properties.getHostPorta());
 		
 		System.out.printf("Notificando %s através do e-mail %s: %s\n", cliente.getName(),
 				cliente.getEmail(), mensagem);
