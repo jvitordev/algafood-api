@@ -15,7 +15,7 @@ public class NotificadorProperties {
 	/**
 	 * Host Porta
 	 */
-	private Integer hostPorta = 25;
+	private Integer hostPorta;
 	
 	public String getHostServidor() {
 		return hostServidor;
