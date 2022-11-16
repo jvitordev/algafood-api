@@ -1,4 +1,4 @@
-package com.algaworks.algafood.infrastructure;
+package com.algaworks.algafood.infrastructure.repository;
 
 import java.util.List;
 
