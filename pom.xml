@@ -63,7 +63,8 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
-		</dependency>
+            <version>2.14.0</version>
+        </dependency>
 	</dependencies>
 
 	<build>

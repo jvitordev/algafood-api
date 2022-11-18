@@ -8,9 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -29,6 +26,6 @@ public class Cidade {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    // @OnDelete(action = OnDeleteAction.CASCADE)
     private Estado estado;
 }
