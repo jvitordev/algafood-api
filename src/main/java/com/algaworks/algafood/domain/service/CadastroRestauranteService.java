@@ -28,8 +28,8 @@ public class CadastroRestauranteService {
                 "Não existe cadastro de cozinha com código %d", 
                 cozinhaId
                 ));
-        }
-        
+            }
+            
         return restauranteRepository.adicionar(restaurante);
     }
 }
