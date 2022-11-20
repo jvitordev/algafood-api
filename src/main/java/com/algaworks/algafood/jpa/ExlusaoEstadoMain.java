@@ -21,7 +21,7 @@ public class ExlusaoEstadoMain {
 		Estado estado = new Estado();
 		estado.setId(1L);
 		
-		estados.remover(estado);
+		estados.remover(estado.getId());
 	}
 
 }
