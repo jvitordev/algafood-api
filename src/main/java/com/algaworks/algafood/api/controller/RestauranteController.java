@@ -3,10 +3,10 @@ package com.algaworks.algafood.api.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
@@ -45,19 +45,20 @@ public class RestauranteController {
 
     @GetMapping
     public List<Restaurante> todos() {
-        return restauranteRepository.todos();
+        return restauranteRepository.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Restaurante> porId(@PathVariable Long id) {
 
-        try {
-            Restaurante restaurante = restauranteRepository.porId(id);
-            return ResponseEntity.ok(restaurante);
+            Optional<Restaurante> restaurante = restauranteRepository.findById(id);
 
-        } catch (EmptyResultDataAccessException e) {
+            if (restaurante.isPresent()) {
+                
+                return ResponseEntity.ok(restaurante.get());
+            }
+            
             return ResponseEntity.notFound().build();
-        }
     }
 
     @PostMapping
@@ -77,16 +78,18 @@ public class RestauranteController {
     public ResponseEntity<?> editar(@PathVariable Long id, @RequestBody Restaurante restaurante) {
         
         try {
-            Restaurante restauranteAtual = restauranteRepository.porId(id);
+            Optional<Restaurante> restauranteAtual = restauranteRepository.findById(id);
 
-            BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
-            restauranteAtual = cadastroRestaurante.salvar(restauranteAtual);
+            if (restauranteAtual.isPresent()) {
+                
+                BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id");
+                Restaurante restauranteSalvo = cadastroRestaurante.salvar(restauranteAtual.get());
+    
+                return ResponseEntity.ok(restauranteSalvo);
+            }
 
-            return ResponseEntity.ok(restauranteAtual);
-            
-        } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.notFound().build();
-
+            
         } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -98,15 +101,16 @@ public class RestauranteController {
         @PathVariable Long id, 
         @RequestBody Map<String, Object> campos) 
     {
-        try {
-            Restaurante restauranteAtual = restauranteRepository.porId(id);
-            merge(campos, restauranteAtual);
+            Optional<Restaurante> restauranteAtual = restauranteRepository.findById(id);
 
-            return editar(id, restauranteAtual);
+            if (restauranteAtual.isPresent()) {
+                
+                merge(campos, restauranteAtual.get());
+    
+                return editar(id, restauranteAtual.get());
+            }
             
-        } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.notFound().build();
-        }
     }
 
     private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {

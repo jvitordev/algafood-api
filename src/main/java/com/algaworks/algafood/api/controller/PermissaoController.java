@@ -19,75 +19,72 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
-import com.algaworks.algafood.domain.model.Estado;
-import com.algaworks.algafood.domain.repository.EstadoRepository;
-import com.algaworks.algafood.domain.service.CadastroEstadoService;
+import com.algaworks.algafood.domain.model.Permissao;
+import com.algaworks.algafood.domain.repository.PermissaoRepository;
+import com.algaworks.algafood.domain.service.CadastroPermissaoService;
 
 @RestController
-@RequestMapping("/estados")
-public class EstadoController {
-    
-    @Autowired
-    private EstadoRepository estadoRepository;
+@RequestMapping("/permissoes")
+public class PermissaoController {
 
     @Autowired
-    private CadastroEstadoService cadastroEstado;
+    PermissaoRepository permissaoRepository;
 
-    @GetMapping()
-    public List<Estado> todos() {
-        return estadoRepository.findAll();
+    @Autowired
+    CadastroPermissaoService cadastroPermissao;
+
+    @GetMapping
+    public List<Permissao> todas() {
+        return permissaoRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Estado> porId(@PathVariable Long id) {
+    public ResponseEntity<Permissao> porId(@PathVariable Long id) {
+        Optional<Permissao> permissao = permissaoRepository.findById(id);
 
-        Optional<Estado> estado = estadoRepository.findById(id);
+        if (permissao.isPresent()) {
 
-        if (estado.isPresent()) {
-
-            return ResponseEntity.ok(estado.get());
+            return ResponseEntity.ok(permissao.get());
         }
-
+        
         return ResponseEntity.notFound().build();
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-	public Estado adicionar(@RequestBody Estado estado) {
+    public Permissao adicionar(@RequestBody Permissao permissao) {
 
-        return cadastroEstado.salvar(estado);
+        return cadastroPermissao.salvar(permissao);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Estado> editar(@PathVariable Long id, @RequestBody Estado estado){
-            Optional<Estado> estadoAtual = estadoRepository.findById(id);
+    public ResponseEntity<Permissao> editar(@PathVariable Long id, @RequestBody Permissao permissao) {
+        Optional<Permissao> permissaoAtual = permissaoRepository.findById(id);
 
-            if (estadoAtual.isPresent()) {
+        if (permissaoAtual.isPresent()) {
+            BeanUtils.copyProperties(permissao, permissaoAtual.get(), "id");
+            Permissao permissaoSalva = cadastroPermissao.salvar(permissaoAtual.get());
 
-                BeanUtils.copyProperties(estado, estadoAtual.get(), "id");
-                Estado estadoSalvo = cadastroEstado.salvar(estadoAtual.get());
+            return ResponseEntity.ok(permissaoSalva);
+        }
 
-                return ResponseEntity.ok(estadoSalvo);
-            }
-
-            return ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-	public ResponseEntity<?> remover(@PathVariable Long id){
-        
+    public ResponseEntity<?> excluir(@PathVariable Long id) {
+
         try {
-    
-            cadastroEstado.excluir(id);
+            cadastroPermissao.excluir(id);
 
             return ResponseEntity.noContent().build();
-    
-            
+
         } catch (EntidadeNaoEncontradaException e) {
-            
+
             return ResponseEntity.notFound().build();
 
         } catch (EntidadeEmUsoException e) {
+
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
