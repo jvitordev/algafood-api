@@ -1,10 +1,10 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,19 +35,20 @@ public class CozinhaController {
 
     @GetMapping
     public List<Cozinha> todas() {
-        return cozinhaRepository.todas();
+        return cozinhaRepository.findAll();
     }
 
     @GetMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> porId(@PathVariable Long cozinhaId) {
 
-        try {
-            Cozinha cozinha =  cozinhaRepository.porId(cozinhaId);
-            return ResponseEntity.ok(cozinha);
+    	Optional<Cozinha> cozinha =  cozinhaRepository.findById(cozinhaId);
+    	
+    	if (cozinha.isPresent()) {
+			
+    		return ResponseEntity.ok(cozinha.get());
+		}
 
-        } catch (EmptyResultDataAccessException e) {
-            return ResponseEntity.notFound().build();
-        }
+    	return ResponseEntity.notFound().build();
     }
 
     @PostMapping
@@ -57,18 +58,18 @@ public class CozinhaController {
     }
 
     @PutMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> editar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+    public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
 
-        try {
-            Cozinha cozinhaAtual = cozinhaRepository.porId(cozinhaId);
-            BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-            cozinhaAtual = cadastroCozinha.salvar(cozinhaAtual);
+    	Optional<Cozinha> cozinhaAtual = cozinhaRepository.findById(cozinhaId);
+    	
+    	if (cozinhaAtual.isPresent()) {
+    		BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
+            Cozinha cozinhaSalva = cadastroCozinha.salvar(cozinhaAtual.get());
 
-            return ResponseEntity.ok(cozinhaAtual);
+            return ResponseEntity.ok(cozinhaSalva);
+		}
 
-        } catch (EmptyResultDataAccessException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{cozinhaId}")
