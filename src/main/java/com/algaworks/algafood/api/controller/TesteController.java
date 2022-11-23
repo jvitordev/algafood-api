@@ -25,10 +25,10 @@ public class TesteController {
     private RestauranteRepository restauranteRepository;
 
     // método de teste para consulta JPQL
-   @GetMapping("/cozinhas/por-nome")
-   public List<Cozinha> cozinhasPorNome(String nome) {
-       return cozinhaRepository.findTodasByNome(nome);
-   }
+    @GetMapping("/cozinhas/por-nome")
+    public List<Cozinha> cozinhasPorNome(String nome) {
+        return cozinhaRepository.findTodasByNome(nome);
+    }
 
    @GetMapping("/cozinhas/unica-por-nome")
    public Optional<Cozinha>  cozinhaPorNome(String nome) {
@@ -42,16 +42,16 @@ public class TesteController {
 
    @GetMapping("/restaurantes/por-cozinha")
    public List<Restaurante> restaurantesPorCozinha(String nome, Long cozinhaId) {
-       return restauranteRepository.findByNomeContainingAndCozinhaId(nome, cozinhaId);
+       return restauranteRepository.procurarPorNome(nome, cozinhaId);
    }
 
    @GetMapping("/restaurantes/um-por-nome")
    public Optional<Restaurante> restauranteUmPorNome(String nome) {
-    return restauranteRepository.findFirstByNomeContaining(nome);
+       return restauranteRepository.findFirstByNomeContaining(nome);
    }
 
    @GetMapping("/restaurantes/top2-por-nome")
    public List<Restaurante> restauranteDoisPorNome(String nome) {
-    return restauranteRepository.findTop2ByNomeContaining(nome);
+       return restauranteRepository.findTop2ByNomeContaining(nome);
    }
 }
