@@ -1,15 +1,15 @@
 package com.algaworks.algafood.infrastructure.repository;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.RestauranteRepositoryQuery;
@@ -17,14 +17,9 @@ import com.algaworks.algafood.domain.repository.RestauranteRepositoryQuery;
 @Repository
 public class RestauranteRepositoryImpl implements RestauranteRepositoryQuery {
 
-    @Autowired
+    @PersistenceContext
     private EntityManager manager;
 
-    /*
-     * Método utilizado por TesteController para retornar uma lista de restaurantes
-     * que correspondam ao nome e faixa de taxa de frete desejados.
-     * Se nenhum parâmetro é passado, retorna uma lista com todos os restaurantes cadastrados.
-     */
     @Override
     public List<Restaurante> find(
         String nome, 
@@ -32,80 +27,24 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQuery {
         BigDecimal taxaFreteFinal
     ) 
     {
-        /*
-         * StringBuilder é instanciado para futura concatenação de strings com partes da
-         * consulta JPQL
-         */
-        var jpql = new StringBuilder();
+        // ============== Exemplo de consulta simples com Criteria API =================
 
-        /*
-         * caso todos os parâmetros sejam nulos, serão listados todos os restaurantes a
-         * primeira parte da consulta é adicionada ao objeto StringBuilder por meio de
-         * ppend
-         */
-        jpql.append("from Restaurante where 0 = 0 ");
+        // Não utiliza os parâmetros do método find, para fins didáticos do exemplo
 
-        /*
-         * um HashMap é instanciado para auxiliar no uso de setParameter conforme os
-         * parâmetros não nulos
-         */
-        var query = new HashMap<String, Object>();
+        // constróio uma instância de Criteria a partir de EntityManager
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
 
-        /*
-         * se o nome é uma string de comprimento maior que zero ou é null,
-         * ajuste a consulta e adicione uma chave e valor conforme o parâmetro
-         */
-        if (StringUtils.hasLength(nome)) {
+        // inicia uma query a partir de builder e atribui a CriteriaQuery tipada de Restaurante
+        CriteriaQuery<Restaurante> criteria = builder.createQuery(Restaurante.class);
 
-            jpql.append("and nome like :nome ");
-            query.put("nome", "%" + nome + "%");
-        }
+        // adiciona a cláusula "from" referenciando a entidade representada por Restaurante
+        criteria.from(Restaurante.class);
 
-        /*
-         * se o taxaFreteInicial é null,
-         * ajuste a consulta e adicione uma chave e valor conforme o parâmetro
-         */
-        if (taxaFreteInicial != null) {
+        // instancia a query formada por criteria e atribui a um TypedQuery tipado de Restaurante
+        TypedQuery<Restaurante> query = manager.createQuery(criteria);
 
-            jpql.append("and taxaFrete >= :taxaInicial ");
-            query.put("taxaInicial", taxaFreteInicial);
-        }
-
-        /*
-         * se o taxaFreteFinal é null,
-         * ajuste a consulta e adicione uma chave e valor conforme o parâmetro
-         */
-        if (taxaFreteFinal != null) {
-
-            jpql.append("and taxaFrete <= :taxaFinal");
-            query.put("taxaFinal", taxaFreteFinal);
-        }
-
-        /*
-         * instancia uma consulta tipada de Restaurante com EntityManager
-         * para futura inserção de setParameter conforme parâmetros não nulos
-         */
-        TypedQuery<Restaurante> consulta =  manager.createQuery(
-            jpql.toString(), 
-            Restaurante.class
-        );
-
-        /*
-         * adicona as chaves e os valores inseridos em query HashMap aos parâmetros de
-         * setParameter
-         */
-        query.forEach((chave, valor) -> {
-
-            consulta.setParameter(chave, valor);
-        });
-
-        /*
-         * retorna uma lista de restaurantes encontrados no BD correspondentes aos
-         * parâmetros
-         * da consulta, se nada é encontrado, uma lista vazia é retornada
-         */
-        return consulta.getResultList();
-
+        // retorna uma lista com o resultado da consulta
+        return query.getResultList();
     }
     
 }

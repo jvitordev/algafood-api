@@ -40,10 +40,10 @@ public class TesteController {
        return restauranteRepository.find(nome, taxaInicial, taxaFinal);
    }
 
-   @GetMapping("/restaurantes/por-cozinha")
-   public List<Restaurante> restaurantesPorCozinha(String nome, Long cozinhaId) {
-       return restauranteRepository.procurarPorNome(nome, cozinhaId);
-   }
+//    @GetMapping("/restaurantes/por-cozinha")
+//    public List<Restaurante> restaurantesPorCozinha(String nome, Long cozinhaId) {
+//        return restauranteRepository.procurarPorNome(nome, cozinhaId);
+//    }
 
    @GetMapping("/restaurantes/um-por-nome")
    public Optional<Restaurante> restauranteUmPorNome(String nome) {
