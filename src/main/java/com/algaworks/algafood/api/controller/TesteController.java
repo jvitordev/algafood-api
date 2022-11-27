@@ -13,6 +13,8 @@ import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
+import com.algaworks.algafood.infrastructure.repository.spec.RestauranteComFreteGratisSpec;
+import com.algaworks.algafood.infrastructure.repository.spec.RestauranteComNomeSemelhanteSpec;
 
 @RestController
 @RequestMapping("/teste")
@@ -38,6 +40,15 @@ public class TesteController {
    @GetMapping("/restaurantes/por-taxa-frete")
    public List<Restaurante> restaurantesPorTaxaFrete(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal) {
        return restauranteRepository.find(nome, taxaInicial, taxaFinal);
+   }
+
+   // método que utiliza specifications para retornar uma lista de restaurantes que possuem
+   // frete grátis
+   @GetMapping("/restaurantes/por-frete-gratis")
+   public List<Restaurante> restaurantesPorFreteGratis(String nome) {
+       var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
+       var comFreteGratis = new RestauranteComFreteGratisSpec();
+       return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
    }
 
 //    @GetMapping("/restaurantes/por-cozinha")
