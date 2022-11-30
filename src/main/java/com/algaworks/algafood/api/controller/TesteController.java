@@ -30,6 +30,11 @@ public class TesteController {
         return cozinhaRepository.findTodasByNome(nome);
     }
 
+    @GetMapping("/cozinhas/primeiro")
+    public Optional<Cozinha> cozinhasPrimeiro() {
+     return cozinhaRepository.buscarPrimeiro();
+    }
+
    @GetMapping("/cozinhas/unica-por-nome")
    public Optional<Cozinha>  cozinhaPorNome(String nome) {
        return cozinhaRepository.findByNome(nome);
@@ -61,5 +66,11 @@ public class TesteController {
    @GetMapping("/restaurantes/top2-por-nome")
    public List<Restaurante> restauranteDoisPorNome(String nome) {
        return restauranteRepository.findTop2ByNomeContaining(nome);
+   }
+
+   // executa o método personalizado criado na interface CustomJpaRepository
+   @GetMapping("/restaurantes/primeiro")
+   public Optional<Restaurante> restaurantePrimeiro() {
+    return restauranteRepository.buscarPrimeiro();
    }
 }
