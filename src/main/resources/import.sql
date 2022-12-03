@@ -24,3 +24,8 @@ insert into permissao (id, nome, descricao) values (1, 'CONSULTAR_COZINHAS', 'Pe
 insert into permissao (id, nome, descricao) values (2, 'EDITAR_COZINHAS', 'Permite editar cozinhas');
 
 insert into restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) values (1, 1), (1, 2), (1, 3), (2, 3), (3, 2), (3, 3);
+
+insert into produto (nome, descricao, preco, ativo, produto_restaurante_id) values ("SSD 480GB", "Sata SSD para notebook", 359.99, true, 1);
+insert into produto (nome, descricao, preco, ativo, produto_restaurante_id) values ("RAM Memory 16GB", "Ideal para jogos", 529.90, true, 2);
+insert into produto (nome, descricao, preco, ativo, produto_restaurante_id) values ("Monitor Dell 28P", "Resolução 4k", 2499.09, true, 3);
+insert into produto (nome, descricao, preco, ativo, produto_restaurante_id) values ("Mouse Dell", "Bluetooth", 14.00, false, 1);
