@@ -43,5 +43,14 @@ insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Bif
 insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('T-Bone', 'Corte muito saboroso, com um osso em formato de T, sendo de um lado o contrafilé e do outro o filé mignon', 89, 1, 4);
 
 insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Sanduíche X-Tudo', 'Sandubão com muito queijo, hamburger bovino, bacon, ovo, salada e maionese', 19, 1, 5);
-
 insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Espetinho de Cupim', 'Acompanha farinha, mandioca e vinagrete', 8, 1, 6);
+
+insert into grupo (nome) values ("Administrador"), ("Atendente"), ("Tesoureiro");
+
+insert into grupo_permissao (grupo_id, permissao_id) values (1, 2), (1, 2), (2, 1), (3, 2);
+
+insert into usuario (nome, email, senha, data_cadastro) values ("João Vitor", "joao@mail.com", "123", utc_timestamp);
+insert into usuario (nome, email, senha, data_cadastro) values ("Luana", "luana@mail.com", "456", utc_timestamp);
+insert into usuario (nome, email, senha, data_cadastro) values ("Vitoria", "vitoria@mail.com", "789", utc_timestamp);
+
+insert into usuario_grupo (usuario_id, grupo_id) values (1, 1), (2, 3), (3, 2);
