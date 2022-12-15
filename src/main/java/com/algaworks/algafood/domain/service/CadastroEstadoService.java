@@ -13,6 +13,12 @@ import com.algaworks.algafood.domain.repository.EstadoRepository;
 @Service
 public class CadastroEstadoService {
 
+    private static final String MSG_ESTADO_EM_USO 
+        = "O estado de id %d não pode ser excluído, pois está em uso";
+
+    private static final String MSG_ESTADO_NAO_EXISTE 
+        = "Não existe cadastro de estado com o id %d";
+
     @Autowired
     private EstadoRepository estadoRepository;
 
@@ -27,14 +33,23 @@ public class CadastroEstadoService {
             
         } catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(String.format(
-                "Não existe cadastro de estado com o id %d", 
+                MSG_ESTADO_NAO_EXISTE, 
                 id
                 ));
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(String.format(
-                "O estado de id %d não pode ser excluído, pois está em uso", 
+                MSG_ESTADO_EM_USO, 
                 id
                 ));
         }
     };
+
+    public Estado buscarOuFalhar (Long id) {
+
+        return estadoRepository.findById(id).orElseThrow(
+            () -> new EntidadeNaoEncontradaException(
+                String.format(MSG_ESTADO_NAO_EXISTE, id)
+            )
+        );
+    }
 }

@@ -15,18 +15,26 @@ import com.algaworks.algafood.domain.repository.RestauranteRepository;
 @Service
 public class CadastroRestauranteService {
     
+    private static final String MSG_RESTAURANTE_EM_USO 
+        = "O restaurante de id %d não pode ser excluído, pois está em uso!";
+
+    private static final String MSG_RESTAURANTE_NAO_EXISTE 
+        = "Não existe um restaurante cadastrado com o id %d!";
+
     @Autowired
     RestauranteRepository restauranteRepository;
 
     @Autowired
     CozinhaRepository cozinhaRepository;
 
+    @Autowired
+    CadastroCozinhaService cadastroCozinha;
+
 	public Restaurante salvar(Restaurante restaurante) {
 
 		Long cozinhaId = restaurante.getCozinha().getId();
 
-		Cozinha cozinha = cozinhaRepository.findById(cozinhaId).orElseThrow(() -> new EntidadeNaoEncontradaException(
-				String.format("Não existe cadastro de cozinha com código %d", cozinhaId)));
+		Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
         
 		restaurante.setCozinha(cozinha);
 
@@ -39,15 +47,24 @@ public class CadastroRestauranteService {
             
         } catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(String.format(
-                "Não existe um restaurante cadastrado com o id %d!", 
+                MSG_RESTAURANTE_NAO_EXISTE, 
                 id
                 ));
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(String.format(
-                "O restaurante de id %d não pode ser excluído, pois está em uso!", 
+                MSG_RESTAURANTE_EM_USO, 
                 id
                 ));
         }
         
+    }
+
+    public Restaurante buscarOuFalhar (Long id) {
+
+        return restauranteRepository.findById(id).orElseThrow(
+            () -> new EntidadeNaoEncontradaException(
+                String.format(MSG_RESTAURANTE_NAO_EXISTE, id)
+            )
+        );
     }
 }
