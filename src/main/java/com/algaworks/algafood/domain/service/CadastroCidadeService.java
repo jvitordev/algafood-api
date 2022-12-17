@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
@@ -62,7 +63,7 @@ public class CadastroCidadeService {
     public Cidade buscarOuFalhar (Long id) {
 
         return cidadeRepository.findById(id).orElseThrow(
-            () -> new EntidadeNaoEncontradaException(
+            () -> new EstadoNaoEncontradoException(
                 String.format(MSG_CIDADE_NAO_ENCONTRADA, id)
             ));
     }
