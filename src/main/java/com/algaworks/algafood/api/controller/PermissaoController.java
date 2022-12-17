@@ -1,12 +1,10 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Permissao;
 import com.algaworks.algafood.domain.repository.PermissaoRepository;
 import com.algaworks.algafood.domain.service.CadastroPermissaoService;
@@ -39,15 +35,9 @@ public class PermissaoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Permissao> porId(@PathVariable Long id) {
-        Optional<Permissao> permissao = permissaoRepository.findById(id);
+    public Permissao buscar(@PathVariable Long id) {
 
-        if (permissao.isPresent()) {
-
-            return ResponseEntity.ok(permissao.get());
-        }
-        
-        return ResponseEntity.notFound().build();
+        return cadastroPermissao.buscarOuFalhar(id);
     }
 
     @PostMapping
@@ -58,34 +48,20 @@ public class PermissaoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Permissao> editar(@PathVariable Long id, @RequestBody Permissao permissao) {
-        Optional<Permissao> permissaoAtual = permissaoRepository.findById(id);
+    public Permissao atualizar(@PathVariable Long id, @RequestBody Permissao permissao) {
 
-        if (permissaoAtual.isPresent()) {
-            BeanUtils.copyProperties(permissao, permissaoAtual.get(), "id");
-            Permissao permissaoSalva = cadastroPermissao.salvar(permissaoAtual.get());
+        Permissao permissaoAtual = cadastroPermissao.buscarOuFalhar(id);
 
-            return ResponseEntity.ok(permissaoSalva);
-        }
+        BeanUtils.copyProperties(permissao, permissaoAtual, "id");
 
-        return ResponseEntity.notFound().build();
+        return cadastroPermissao.salvar(permissaoAtual);
+
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> excluir(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long id) {
 
-        try {
-            cadastroPermissao.excluir(id);
-
-            return ResponseEntity.noContent().build();
-
-        } catch (EntidadeNaoEncontradaException e) {
-
-            return ResponseEntity.notFound().build();
-
-        } catch (EntidadeEmUsoException e) {
-
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
+        cadastroPermissao.excluir(id);
     }
 }

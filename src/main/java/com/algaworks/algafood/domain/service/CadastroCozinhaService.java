@@ -23,6 +23,7 @@ public class CadastroCozinhaService {
     private CozinhaRepository cozinhaRepository;
 
     public Cozinha salvar(Cozinha cozinha) {
+        
        return cozinhaRepository.save(cozinha);
     }
 

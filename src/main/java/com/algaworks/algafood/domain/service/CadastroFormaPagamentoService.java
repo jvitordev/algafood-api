@@ -2,6 +2,7 @@ package com.algaworks.algafood.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
@@ -11,6 +12,11 @@ import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 
 @Service
 public class CadastroFormaPagamentoService {
+
+    private static final String MSG_FORMA_PAG_EM_USO 
+        = "A forma de pagamanto de id %d não pode ser excluída, pois está em uso!";
+    private static final String MSG_FORMA_PAG_NAO_ENCONTRADA 
+        = "Não existe forma de pagamento cadastrada com o id %d";
 
     @Autowired
     FormaPagamentoRepository formaPagamentoRepository;
@@ -22,16 +28,26 @@ public class CadastroFormaPagamentoService {
 
     public void excluir(Long id) {
         try {
-            formaPagamentoRepository.findById(id)
-                    .orElseThrow(() -> new EntidadeNaoEncontradaException(
-                            String.format("Não existe forma de pagamento cadastrada com o id %d", id)));
 
             formaPagamentoRepository.deleteById(id);
 
+        } catch (EmptyResultDataAccessException e) {
+
+            throw new EntidadeNaoEncontradaException(
+                    String.format(MSG_FORMA_PAG_NAO_ENCONTRADA, id));
+
         } catch (DataIntegrityViolationException e) {
-            
+
             throw new EntidadeEmUsoException(
-                    String.format("A forma de pagamanto de id %d não pode ser excluída, pois está em uso!", id));
+                    String.format(MSG_FORMA_PAG_EM_USO, id));
         }
+    }
+
+    public FormaPagamento buscarOuFalhar(Long id) {
+        return formaPagamentoRepository.findById(id).orElseThrow(
+            () -> new EntidadeNaoEncontradaException(
+                String.format(MSG_FORMA_PAG_NAO_ENCONTRADA, id)
+            )
+        );
     }
 }

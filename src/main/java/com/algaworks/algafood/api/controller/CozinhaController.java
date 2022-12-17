@@ -35,7 +35,7 @@ public class CozinhaController {
     }
 
     @GetMapping("/{cozinhaId}")
-    public Cozinha porId(@PathVariable Long cozinhaId) {
+    public Cozinha buscar(@PathVariable Long cozinhaId) {
 
     	return cadastroCozinha.buscarOuFalhar(cozinhaId);
     }
@@ -43,6 +43,7 @@ public class CozinhaController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public Cozinha adicionar(@RequestBody Cozinha cozinha) {
+
         return cadastroCozinha.salvar(cozinha);
     }
 
