@@ -6,7 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.FormaPagamentoNaoEncontradoException;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 
@@ -15,8 +15,6 @@ public class CadastroFormaPagamentoService {
 
     private static final String MSG_FORMA_PAG_EM_USO 
         = "A forma de pagamanto de id %d não pode ser excluída, pois está em uso!";
-    private static final String MSG_FORMA_PAG_NAO_ENCONTRADA 
-        = "Não existe forma de pagamento cadastrada com o id %d";
 
     @Autowired
     FormaPagamentoRepository formaPagamentoRepository;
@@ -33,8 +31,7 @@ public class CadastroFormaPagamentoService {
 
         } catch (EmptyResultDataAccessException e) {
 
-            throw new EntidadeNaoEncontradaException(
-                    String.format(MSG_FORMA_PAG_NAO_ENCONTRADA, id));
+            throw new FormaPagamentoNaoEncontradoException(id);
 
         } catch (DataIntegrityViolationException e) {
 
@@ -45,9 +42,6 @@ public class CadastroFormaPagamentoService {
 
     public FormaPagamento buscarOuFalhar(Long id) {
         return formaPagamentoRepository.findById(id).orElseThrow(
-            () -> new EntidadeNaoEncontradaException(
-                String.format(MSG_FORMA_PAG_NAO_ENCONTRADA, id)
-            )
-        );
+            () -> new FormaPagamentoNaoEncontradoException(id));
     }
 }
