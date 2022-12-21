@@ -44,11 +44,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         WebRequest request
     ) {
 
+        HttpStatus status = HttpStatus.CONFLICT;
+        ProblemType problemType = ProblemType.ENTIDADE_EM_USO;
+        String detail = ex.getMessage();
+
+        Problem problem = createProblemBuilder(status, problemType, detail).build();
+
         return handleExceptionInternal(
             ex, 
-            ex.getMessage(), 
+            problem, 
             new HttpHeaders(), 
-            HttpStatus.CONFLICT, 
+            status, 
             request
         );
     }
@@ -59,11 +65,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         WebRequest request
     ) {
 
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ProblemType problemType = ProblemType.ERRO_NEGOCIO;
+        String detail = ex.getMessage();
+
+        Problem problem = createProblemBuilder(status, problemType, detail).build();
+
         return handleExceptionInternal(
             ex, 
-            ex.getMessage(), 
+            problem, 
             new HttpHeaders(), 
-            HttpStatus.BAD_REQUEST, 
+            status, 
             request
         );
     }
