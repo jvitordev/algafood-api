@@ -1,7 +1,6 @@
 package com.algaworks.algafood.api.exceptionhandler;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -56,6 +56,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         else if (rootCause instanceof NoHandlerFoundException) {
             return handleNoHandlerFoundException((NoHandlerFoundException) rootCause, headers, status, request);
+        }
+
+        else if (rootCause instanceof MethodArgumentNotValidException) {
+            return handleMethodArgumentNotValid((MethodArgumentNotValidException) rootCause, headers, status, request);
         }
 
         ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
@@ -152,6 +156,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             status, 
             request
         );
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+            HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+        String detail = "Um ou mais campos estão inválidos. Faça o preenchimeno correto e "
+        +"tente novamente.";
+        
+        Problem problem = createProblemBuilder(status, problemType, detail, detail).build();
+
+        return handleExceptionInternal(
+            ex, 
+            problem, 
+            headers, 
+            status, 
+            request
+        );
+        // return super.handleMethodArgumentNotValid(ex, headers, status, request);
     }
 
     @ExceptionHandler(EntidadeNaoEncontradaException.class)
