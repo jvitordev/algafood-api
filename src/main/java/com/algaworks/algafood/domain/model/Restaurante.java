@@ -47,7 +47,7 @@ public class Restaurante {
 	private String nome;
 	
 	@NotNull
-	@PositiveOrZero
+	@PositiveOrZero(message = "{msg_taxa_frete}")
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 	
