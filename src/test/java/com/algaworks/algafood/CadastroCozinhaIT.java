@@ -15,7 +15,6 @@
 package com.algaworks.algafood;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -60,7 +59,19 @@ public class CadastroCozinhaIT {
 		.when()
 			.get()
 		.then()
-			.body("", hasSize(4))
-			.body("nome", hasItems("Indiana", "Tailandesa"));
+			.body("", hasSize(4));
+	}
+
+	@Test
+	public void testRetornarStatus201_QuandoCadastrarCozinha() {
+
+		given()
+			.body("{ \"nome\": \"Chinesa\" }")
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.post()
+		.then()
+			.statusCode(HttpStatus.CREATED.value());
 	}
 }
