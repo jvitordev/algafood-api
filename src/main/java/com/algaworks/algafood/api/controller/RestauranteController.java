@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -77,15 +76,9 @@ public class RestauranteController {
         @PathVariable Long id,
         @Valid @RequestBody RestauranteInput restauranteInput) {
 
-        Restaurante restaurante = restauranteInputDisassembier.toDomainObject(restauranteInput);
-
         Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(id);
 
-        BeanUtils.copyProperties(
-            restaurante,
-            restauranteAtual,
-            "id", "formasPagamento", "endereco", "dataCadastro", "produtos"
-        );
+        restauranteInputDisassembier.copyToDomainModel(restauranteInput, restauranteAtual);
 
         try {
 
