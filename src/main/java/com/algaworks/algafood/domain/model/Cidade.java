@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
@@ -32,6 +33,7 @@ public class Cidade {
     private String nome;
 
     @Valid
+    @NotNull
     @ConvertGroup(from = Default.class, to = EstadoId.class)
     @ManyToOne
     @JoinColumn(nullable = false)
