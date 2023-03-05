@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.assembier.RestauranteInputDisassembier;
 import com.algaworks.algafood.api.assembier.RestauranteModelAssembier;
 import com.algaworks.algafood.api.model.RestauranteModel;
 import com.algaworks.algafood.api.model.input.RestauranteInput;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
-import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
@@ -39,6 +39,9 @@ public class RestauranteController {
 
     @Autowired
     RestauranteModelAssembier restauranteModelAssembier;
+
+    @Autowired
+    RestauranteInputDisassembier restauranteInputDisassembier;
 
     @GetMapping
     public List<RestauranteModel> todos() {
@@ -59,7 +62,7 @@ public class RestauranteController {
 
         try {
 
-            Restaurante restaurante = toDomainObject(restauranteInput);
+            Restaurante restaurante = restauranteInputDisassembier.toDomainObject(restauranteInput);
             
             return restauranteModelAssembier.toModel(cadastroRestaurante.salvar(restaurante));
 
@@ -74,7 +77,7 @@ public class RestauranteController {
         @PathVariable Long id,
         @Valid @RequestBody RestauranteInput restauranteInput) {
 
-        Restaurante restaurante = toDomainObject(restauranteInput);
+        Restaurante restaurante = restauranteInputDisassembier.toDomainObject(restauranteInput);
 
         Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(id);
 
@@ -100,18 +103,4 @@ public class RestauranteController {
 
         cadastroRestaurante.excluir(id);
     }
-
-    private Restaurante toDomainObject(RestauranteInput restauranteInput) {
-        
-		Restaurante restaurante = new Restaurante();
-		restaurante.setNome(restauranteInput.getNome());
-		restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
-		
-		Cozinha cozinha = new Cozinha();
-		cozinha.setId(restauranteInput.getCozinha().getId());
-		
-		restaurante.setCozinha(cozinha);
-		
-		return restaurante;
-	}
 }
