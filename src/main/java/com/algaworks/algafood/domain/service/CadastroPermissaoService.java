@@ -31,6 +31,7 @@ public class CadastroPermissaoService {
         try {
 
             permissaoRepository.deleteById(id);
+            permissaoRepository.flush();
 
         } catch (EmptyResultDataAccessException e) {
             

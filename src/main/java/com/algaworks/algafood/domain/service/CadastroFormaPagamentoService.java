@@ -31,6 +31,7 @@ public class CadastroFormaPagamentoService {
         try {
 
             formaPagamentoRepository.deleteById(id);
+            formaPagamentoRepository.flush();
 
         } catch (EmptyResultDataAccessException e) {
 
