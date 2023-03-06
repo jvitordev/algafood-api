@@ -72,6 +72,8 @@ public class Restaurante {
 	@Embedded
 	private Endereco endereco;
 
+	private Boolean ativo = Boolean.TRUE;
+
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<>();
 
@@ -82,4 +84,12 @@ public class Restaurante {
 	@UpdateTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
 	private OffsetDateTime dataAtualizacao;
+
+	public void ativar() {
+		setAtivo(true);
+	}
+
+	public void inativar() {
+		setAtivo(false);
+	}
 }
