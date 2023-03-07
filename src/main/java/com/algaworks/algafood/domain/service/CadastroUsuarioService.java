@@ -1,5 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,11 +19,22 @@ public class CadastroUsuarioService {
 
     private static final String MSG_USUARIO_EM_USO 
         = "O usuário de id %d não pode ser excluído, pois está em uso";
+
     @Autowired
     private UsuarioRepository usuarioRepository;
 
     @Transactional
     public Usuario salvar(Usuario usuario){
+
+        usuarioRepository.detach(usuario);
+
+        Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+
+        if(usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
+            throw new NegocioException(
+                String.format("Já existe usuário cadastrado com o e-mail %s", usuario.getEmail())
+            );
+        }
 
         return usuarioRepository.save(usuario);
     }
