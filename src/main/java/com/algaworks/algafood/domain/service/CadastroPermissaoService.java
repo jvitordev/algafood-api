@@ -44,10 +44,10 @@ public class CadastroPermissaoService {
         }
     }
 
-    public Permissao buscarOuFalhar (Long id) {
+    public Permissao buscarOuFalhar (Long permissaoId) {
         
-        return permissaoRepository.findById(id).orElseThrow(
-            () -> new PermissaoNaoEncontradaException(id)
+        return permissaoRepository.findById(permissaoId).orElseThrow(
+            () -> new PermissaoNaoEncontradaException(permissaoId)
         );
     }
 }
