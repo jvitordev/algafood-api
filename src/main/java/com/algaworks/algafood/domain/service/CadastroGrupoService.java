@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.GrupoNaoEncontradoException;
-import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.model.Permissao;
 import com.algaworks.algafood.domain.repository.GrupoRepository;
@@ -61,15 +60,6 @@ public class CadastroGrupoService {
 
         Grupo grupo = buscarOuFalhar(grupoId);
         Permissao permissao = cadastroPermissao.buscarOuFalhar(permissaoId);
-
-        if (!grupo.getPermissoes().contains(permissao)) {
-            
-            throw new NegocioException(String.format(
-                "A permissão de id %s informada não está associada ao grupo de id %d",
-                permissaoId,
-                grupoId
-            ));
-        }
 
         grupo.desassociarPermissao(permissao);
     }

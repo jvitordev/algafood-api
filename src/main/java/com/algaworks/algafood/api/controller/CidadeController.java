@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembier.CidadeInputDisassembier;
-import com.algaworks.algafood.api.assembier.CidadeModelAssembier;
+import com.algaworks.algafood.api.assembier.CidadeModelAssembler;
 import com.algaworks.algafood.api.model.CidadeModel;
 import com.algaworks.algafood.api.model.input.CidadeInput;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
@@ -40,7 +40,7 @@ public class CidadeController {
     private CidadeInputDisassembier cidadeInputDisassembier;
 
     @Autowired
-    private CidadeModelAssembier cidadeModelAssembier;
+    private CidadeModelAssembler cidadeModelAssembier;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
