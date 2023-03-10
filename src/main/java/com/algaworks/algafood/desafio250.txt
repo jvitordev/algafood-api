@@ -1,0 +1,14 @@
+ManyToMany entre Restaurante e Usuario
+Criar tabela de associcao restaurante_usuario_responsavel
+
+GET: /restaurantes/{restauranteId}/responsaveis
+    ACAO: lista os usuários responsáveis pelo restaurante de id informado
+    STATUS: 200
+
+DELETE: /restaurantes/{restauranteId}/responsaveis/{usuarioId}
+    ACAO: desassocia um usuário responsável pelo restaurante de id informado
+    STATUS: 204
+
+PUT: /restaurantes/{restauranteId}/responsaveis/{usuarioId}
+    ACAO: associa um usuário responsável pelo restaurante de id informado
+    STATUS: 204

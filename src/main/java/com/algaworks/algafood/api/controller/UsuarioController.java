@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembier.UsuarioInputDisassembier;
-import com.algaworks.algafood.api.assembier.UsuarioModelAssembier;
+import com.algaworks.algafood.api.assembier.UsuarioModelAssembler;
 import com.algaworks.algafood.api.model.UsuarioModel;
 import com.algaworks.algafood.api.model.input.SenhaInput;
 import com.algaworks.algafood.api.model.input.UsuarioComSenhaInput;
@@ -40,7 +40,7 @@ public class UsuarioController {
     private UsuarioInputDisassembier usuarioInputDisassembler;
 
     @Autowired
-    private UsuarioModelAssembier usuarioModelAssembler;
+    private UsuarioModelAssembler usuarioModelAssembler;
 
     @GetMapping()
     public List<UsuarioModel> todos() {
