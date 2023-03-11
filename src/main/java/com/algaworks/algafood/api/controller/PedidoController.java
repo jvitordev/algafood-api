@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.api.assembier.PedidoModelAssembler;
+import com.algaworks.algafood.api.assembier.PedidoResumoModelAssembler;
 import com.algaworks.algafood.api.model.PedidoModel;
+import com.algaworks.algafood.api.model.PedidoResumoModel;
+import com.algaworks.algafood.domain.model.Pedido;
 import com.algaworks.algafood.domain.repository.PedidoRepository;
 import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 
@@ -24,27 +27,34 @@ public class PedidoController {
     PedidoRepository pedidoRepository;
     
     @Autowired
-    private EmissaoPedidoService cadastroPedido;
+    private EmissaoPedidoService emissaoPedido;
 
     @Autowired
     PedidoModelAssembler pedidoModelAssembler;
 
-    @GetMapping
-    public List<PedidoModel> todos() {
+    @Autowired
+    PedidoResumoModelAssembler pedidoResumoModelAssembler;
 
-        return pedidoModelAssembler.toCollectionModel(pedidoRepository.findAll());
+    @GetMapping
+    public List<PedidoResumoModel> todos() {
+
+        List<Pedido> pedidos = pedidoRepository.findAll();
+
+        return pedidoResumoModelAssembler.toCollectionModel(pedidos);
     }
 
     @GetMapping("/{pedidoId}")
     public PedidoModel buscar(@PathVariable Long pedidoId) {
-            
-        return pedidoModelAssembler.toModel(cadastroPedido.buscarOuFalhar(pedidoId));
+
+        Pedido pedido = emissaoPedido.buscarOuFalhar(pedidoId);
+
+        return pedidoModelAssembler.toModel(pedido);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long id) {
 
-        cadastroPedido.excluir(id);
+        emissaoPedido.excluir(id);
     }
 }

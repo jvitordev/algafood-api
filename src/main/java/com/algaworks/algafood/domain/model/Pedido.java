@@ -5,11 +5,11 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,44 +34,37 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private BigDecimal subtotal;
-
-    @Column(nullable = false)
     private BigDecimal taxaFrete;
-
-    @Column(nullable = false)
     private BigDecimal valorTotal;
 
-    @CreationTimestamp
-    @Column(nullable = false)
-    private OffsetDateTime dataCriacao;
-
-    private OffsetDateTime dataConfirmacao;
-
-    private OffsetDateTime dataCancelamento;
-
-    private OffsetDateTime dataEntrega;
-    
-    @ManyToOne
-    @JoinColumn(name = "usuario_cliente_id")
-    private Usuario cliente;
-
-    @ManyToOne
-    @JoinColumn(name = "restaurante_id")
-    private Restaurante restaurante;
-
-    @OneToMany(mappedBy = "pedido")
-    private List<ItemPedido> itens = new ArrayList<>();
-    
-    @ManyToOne
-    private FormaPagamento formaPagamento;
-    
     @Embedded
-    private Endereco enderecoEntrega;
+    private Endereco enderecoEntrega;  
 
     @Enumerated(EnumType.STRING)
     private StatusPedido status = StatusPedido.CRIADO;
+
+    @CreationTimestamp
+    private OffsetDateTime dataCriacao;
+
+    private OffsetDateTime dataConfirmacao;
+    private OffsetDateTime dataCancelamento;
+    private OffsetDateTime dataEntrega;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private FormaPagamento formaPagamento;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Restaurante restaurante;
+    
+    @ManyToOne
+    @JoinColumn(name = "usuario_cliente_id", nullable = false)
+    private Usuario cliente;
+    
+    @OneToMany(mappedBy = "pedido")
+    private List<ItemPedido> itens = new ArrayList<>();
 
     public void calcularValorTotal() {
         this.subtotal = getItens().stream()
