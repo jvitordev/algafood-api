@@ -1,8 +1,11 @@
-CRIAR RestauranteResumoModel com id e nome
-CRIAR ItemPedidoModel com id e nome do Produto incluso
-
-GET: /pedidos/{pedidoId}
-    ACAO: listar o pedido de id informado
-
-GET: /pedidos
-    ACAO: listar todos os pedidos independentemente do restaurante
+POST: /pedidos
+    ACAO: incluir um novo pedido informando:
+            id do restaurante
+            id da forma de pagamento
+            endereço de entrega (cep, logradouro, numero, complemento, bairro e cidade{id})
+            itens, marcar com @Size(min = 1)
+    VALIDACOES DO PAYLOAD:
+        restaurante aceita forma de pagamento
+        produto é do restaurante
+    OBS:
+        cliente fixo de id 1, não informar no payload
