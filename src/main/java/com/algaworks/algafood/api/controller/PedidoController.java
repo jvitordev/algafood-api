@@ -47,7 +47,7 @@ public class PedidoController {
     PedidoResumoModelAssembler pedidoResumoModelAssembler;
 
     @GetMapping
-	public List<PedidoResumoModel> listar(PedidoFilter filtro) {
+	public List<PedidoResumoModel> pesquisar(PedidoFilter filtro) {
 		List<Pedido> todosPedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro));
 		
 		return pedidoResumoModelAssembler.toCollectionModel(todosPedidos);
