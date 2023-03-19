@@ -19,6 +19,7 @@ public class PdfVendaReportService implements VendaReportService {
 
     @Autowired
     private VendaQueryService vendaQueryService;
+	
     @Override
     public byte[] emitirVendasDiarias(VendaDiariaFilter filtro, String timeOffset) {
 
