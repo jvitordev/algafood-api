@@ -44,7 +44,7 @@ public class CadastroGrupoService {
                 id
                 ));
         }
-    };
+    }
 
     @Transactional
     public void associarPermissao(Long grupoId, Long permissaoId) {

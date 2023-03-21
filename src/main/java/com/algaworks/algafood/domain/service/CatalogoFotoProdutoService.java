@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,4 +57,20 @@ public class CatalogoFotoProdutoService {
 					() -> new FotoProdutoNaoEncontradaException(produtoId, restauranteId)
 				);
 	}
+
+	@Transactional
+    public void remover(Long restauranteId, Long produtoId){
+        try {
+
+			FotoProduto foto = buscarOuFalhar(restauranteId, produtoId);
+
+			fotoStorage.remover(foto.getNomeArquivo());
+
+            produtoRepository.delete(foto);
+            produtoRepository.flush();
+            
+        } catch (EmptyResultDataAccessException e) {
+            throw new FotoProdutoNaoEncontradaException(produtoId, restauranteId);
+        }
+    }
 }

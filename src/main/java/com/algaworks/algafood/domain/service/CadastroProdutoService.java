@@ -1,5 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -8,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.ProdutoNaoEncontradoException;
+import com.algaworks.algafood.domain.model.FotoProduto;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.repository.ProdutoRepository;
 
@@ -18,7 +21,10 @@ public class CadastroProdutoService {
         = "O produto de id %d não pode ser excluído, pois está em uso!";
 
     @Autowired
-    ProdutoRepository produtoRepository;
+    private ProdutoRepository produtoRepository;
+
+    @Autowired
+    private CatalogoFotoProdutoService catalogoFotoProduto;
 
     @Transactional
     public Produto salvar(Produto produto) {
@@ -27,20 +33,27 @@ public class CadastroProdutoService {
     }
 
     @Transactional
-    public void excluir(Long id) {
+    public void excluir(Long restauranteId, Long produtoId) {
         try {
 
-            produtoRepository.deleteById(id);
+            Optional<FotoProduto> fotoProduto = produtoRepository.findFotoById(restauranteId, produtoId);
+
+            if(fotoProduto.isPresent()){
+
+                catalogoFotoProduto.remover(restauranteId, produtoId);
+            }
+
+            produtoRepository.deleteById(produtoId);
             produtoRepository.flush();
 
         } catch (EmptyResultDataAccessException e) {
 
-            throw new ProdutoNaoEncontradoException(id);
+            throw new ProdutoNaoEncontradoException(produtoId);
 
         } catch (DataIntegrityViolationException e) {
 
             throw new EntidadeEmUsoException(
-                    String.format(MSG_PRODUTO_EM_USO, id));
+                    String.format(MSG_PRODUTO_EM_USO, produtoId));
         }
     }
 

@@ -107,11 +107,11 @@ public class RestauranteProdutoController {
         return produtoModelAssembler.toModel(produtoAtual);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{produtoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void excluir(@PathVariable Long id) {
+    public void excluir(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 
-        cadastroProduto.excluir(id);
+        cadastroProduto.excluir(restauranteId, produtoId);
     }
 
 }
