@@ -3,9 +3,9 @@ package com.algaworks.algafood.domain.service;
 import java.util.Map;
 import java.util.Set;
 
-import io.micrometer.core.lang.NonNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Singular;
 
 public interface EnvioEmailService {
