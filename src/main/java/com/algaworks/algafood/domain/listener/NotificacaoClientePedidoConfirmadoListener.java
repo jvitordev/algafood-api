@@ -18,19 +18,15 @@ public class NotificacaoClientePedidoConfirmadoListener {
     @TransactionalEventListener
     public void aoConfirmarPedido(PedidoConfirmadoEvent event) {
 
-        try {
-            Pedido pedido = event.getPedido();
-    
-            var mensagem = Mensagem.builder()
-                    .assunto(pedido.getRestaurante().getNome() + " - Pedido confirmado")
-                    .corpo("pedido-confirmad.html")
-                    .variavel("pedido", pedido)
-                    .destinatario(pedido.getCliente().getEmail())
-                    .build();
-    
-            envioEmail.enviar(mensagem);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Pedido pedido = event.getPedido();
+
+        var mensagem = Mensagem.builder()
+                .assunto(pedido.getRestaurante().getNome() + " - Pedido confirmado")
+                .corpo("pedido-confirmado.html")
+                .variavel("pedido", pedido)
+                .destinatario(pedido.getCliente().getEmail())
+                .build();
+
+        envioEmail.enviar(mensagem);
     }
 }
