@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,15 +49,7 @@ public class FormaPagamentoController {
     @GetMapping
     public ResponseEntity<List<FormaPagamentoModel>> todas(ServletWebRequest request) {
         
-        ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
-		
-		String eTag = "0";
-		
-		OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.getDataUltimaAtualizacao();
-		
-		if (dataUltimaAtualizacao != null) {
-			eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
-		}
+        String eTag = deepEtag(request, null);
 		
 		if (request.checkNotModified(eTag)) {
 			return null;
@@ -73,13 +66,20 @@ public class FormaPagamentoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FormaPagamentoModel> buscar(@PathVariable Long id) {
+    public ResponseEntity<FormaPagamentoModel> buscar(@PathVariable Long id, ServletWebRequest request) {
+
+        String eTag = deepEtag(request, id);
+
+        if (request.checkNotModified(eTag)) {
+			return null;
+		}
 
         FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(id);
         FormaPagamentoModel formaPagamentoModel = formaPagamentoModelAssembier.toModel(formaPagamento);
 
         return ResponseEntity.ok()
             .cacheControl(CacheControl.maxAge(15, TimeUnit.SECONDS))
+            .eTag(eTag)
             .body(formaPagamentoModel);
     }
 
@@ -109,6 +109,27 @@ public class FormaPagamentoController {
     public void excluir(@PathVariable Long id) {
 
         cadastroFormaPagamento.excluir(id);
+    }
+
+    public String deepEtag(ServletWebRequest request, @Nullable Long id) {
+
+        ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+		
+		String eTag = "0";
+        OffsetDateTime dataUltimaAtualizacao;
+		
+        if (id != null) {
+            
+            dataUltimaAtualizacao = formaPagamentoRepository.getDataAtualizacaoById(id);
+        } else {
+            dataUltimaAtualizacao = formaPagamentoRepository.getDataUltimaAtualizacao();
+        }
+		
+		if (dataUltimaAtualizacao != null) {
+			eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
+		}
+
+        return eTag;
     }
 
 }
