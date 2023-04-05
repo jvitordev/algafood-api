@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.ResourceUriHelper;
 import com.algaworks.algafood.api.assembier.CidadeInputDisassembier;
 import com.algaworks.algafood.api.assembier.CidadeModelAssembler;
 import com.algaworks.algafood.api.model.CidadeModel;
@@ -63,8 +64,11 @@ public class CidadeController {
 
             Cidade cidade = cidadeInputDisassembier.toDomainObject(cidadeInput);
             
-            return cidadeModelAssembier.toModel(cadastroCidade.salvar(cidade));
+            CidadeModel cidadeModel = cidadeModelAssembier.toModel(cadastroCidade.salvar(cidade));
 
+            ResourceUriHelper.addUriInResponseHeader(cidadeModel.getId());
+
+            return cidadeModel;
         } catch (EstadoNaoEncontradoException e) {
             
             throw new NegocioException(e.getMessage(), e);
