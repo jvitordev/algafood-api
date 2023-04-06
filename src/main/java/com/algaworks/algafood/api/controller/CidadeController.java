@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,7 +54,17 @@ public class CidadeController {
     @GetMapping("/{id}")
     public CidadeModel buscar(@PathVariable Long id) {
 
-        return cidadeModelAssembier.toModel(cadastroCidade.buscarOuFalhar(id));
+        CidadeModel cidadeModel = cidadeModelAssembier.toModel(cadastroCidade.buscarOuFalhar(id));
+
+        cidadeModel.add(Link.of("http://api.algafood.local:8080/cidades/1"));
+//		cidadeModel.add(Link.of("http://api.algafood.local:8080/cidades/1", IanaLinkRelations.SELF));
+
+		// cidadeModel.add(Link.of("http://api.algafood.local:8080/cidades", IanaLinkRelations.COLLECTION));
+		cidadeModel.add(Link.of("http://api.algafood.local:8080/cidades", "cidades"));
+
+		cidadeModel.getEstado().add(Link.of("http://api.algafood.local:8080/estados/1"));
+
+        return cidadeModel;
     }
 
     @PostMapping
