@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 
@@ -47,24 +48,24 @@ public class CidadeController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CidadeModel> todas() {
+    public List<CidadeModel> listar() {
 
         return cidadeModelAssembier.toCollectionModel(cidadeRepository.findAll());
     }
-    
+
     @GetMapping("/{id}")
     public CidadeModel buscar(@PathVariable Long id) {
 
         CidadeModel cidadeModel = cidadeModelAssembier.toModel(cadastroCidade.buscarOuFalhar(id));
 
-        cidadeModel.add(linkTo(CidadeController.class)
-				.slash(cidadeModel.getId()).withSelfRel());
-		
-		cidadeModel.add(linkTo(CidadeController.class)
-				.withRel("cidades"));
-		
-		cidadeModel.getEstado().add(linkTo(EstadoController.class)
-				.slash(cidadeModel.getEstado().getId()).withSelfRel());
+        cidadeModel.add(linkTo(methodOn(CidadeController.class)
+                .buscar(cidadeModel.getId())).withSelfRel());
+
+        cidadeModel.add(linkTo(methodOn(CidadeController.class)
+                .listar()).withRel("cidades"));
+
+        cidadeModel.getEstado().add(linkTo(methodOn(EstadoController.class)
+                .buscar(cidadeModel.getEstado().getId())).withSelfRel());
 
         return cidadeModel;
     }
@@ -72,18 +73,18 @@ public class CidadeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CidadeModel adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
-        
+
         try {
 
             Cidade cidade = cidadeInputDisassembier.toDomainObject(cidadeInput);
-            
+
             CidadeModel cidadeModel = cidadeModelAssembier.toModel(cadastroCidade.salvar(cidade));
 
             ResourceUriHelper.addUriInResponseHeader(cidadeModel.getId());
 
             return cidadeModel;
         } catch (EstadoNaoEncontradoException e) {
-            
+
             throw new NegocioException(e.getMessage(), e);
         }
     }
@@ -92,7 +93,7 @@ public class CidadeController {
     public CidadeModel atualizar(@PathVariable Long id, @RequestBody @Valid CidadeInput cidadeInput) {
 
         try {
-            
+
             Cidade cidade = cadastroCidade.buscarOuFalhar(id);
 
             cidadeInputDisassembier.copyToDomainModel(cidadeInput, cidade);
@@ -108,7 +109,7 @@ public class CidadeController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long id) {
-           
+
         cadastroCidade.excluir(id);
     }
 }
