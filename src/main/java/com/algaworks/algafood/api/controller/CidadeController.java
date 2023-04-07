@@ -8,6 +8,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,19 +45,38 @@ public class CidadeController {
     private CidadeInputDisassembier cidadeInputDisassembier;
 
     @Autowired
-    private CidadeModelAssembler cidadeModelAssembier;
+    private CidadeModelAssembler cidadeModelAssembler;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CidadeModel> listar() {
+    public CollectionModel<CidadeModel> listar() {
 
-        return cidadeModelAssembier.toCollectionModel(cidadeRepository.findAll());
+        List<Cidade> cidades = cidadeRepository.findAll();
+
+        List<CidadeModel> cidadesModel = cidadeModelAssembler.toCollectionModel(cidades);
+		
+		cidadesModel.forEach(cidadeModel -> {
+			cidadeModel.add(linkTo(methodOn(CidadeController.class)
+					.buscar(cidadeModel.getId())).withSelfRel());
+			
+			cidadeModel.add(linkTo(methodOn(CidadeController.class)
+					.listar()).withRel("cidades"));
+			
+			cidadeModel.getEstado().add(linkTo(methodOn(EstadoController.class)
+					.buscar(cidadeModel.getEstado().getId())).withSelfRel());
+        });
+
+		CollectionModel<CidadeModel> cidadesCollectionModel = CollectionModel.of(cidadesModel);
+        
+		cidadesCollectionModel.add(linkTo(CidadeController.class).withSelfRel());
+		
+		return cidadesCollectionModel;
     }
 
     @GetMapping("/{id}")
     public CidadeModel buscar(@PathVariable Long id) {
 
-        CidadeModel cidadeModel = cidadeModelAssembier.toModel(cadastroCidade.buscarOuFalhar(id));
+        CidadeModel cidadeModel = cidadeModelAssembler.toModel(cadastroCidade.buscarOuFalhar(id));
 
         cidadeModel.add(linkTo(methodOn(CidadeController.class)
                 .buscar(cidadeModel.getId())).withSelfRel());
@@ -78,7 +98,7 @@ public class CidadeController {
 
             Cidade cidade = cidadeInputDisassembier.toDomainObject(cidadeInput);
 
-            CidadeModel cidadeModel = cidadeModelAssembier.toModel(cadastroCidade.salvar(cidade));
+            CidadeModel cidadeModel = cidadeModelAssembler.toModel(cadastroCidade.salvar(cidade));
 
             ResourceUriHelper.addUriInResponseHeader(cidadeModel.getId());
 
@@ -98,7 +118,7 @@ public class CidadeController {
 
             cidadeInputDisassembier.copyToDomainModel(cidadeInput, cidade);
 
-            return cidadeModelAssembier.toModel(cadastroCidade.salvar(cidade));
+            return cidadeModelAssembler.toModel(cadastroCidade.salvar(cidade));
 
         } catch (EstadoNaoEncontradoException e) {
 
