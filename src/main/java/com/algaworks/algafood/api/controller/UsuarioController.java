@@ -1,10 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +42,7 @@ public class UsuarioController {
     private UsuarioModelAssembler usuarioModelAssembler;
 
     @GetMapping()
-    public List<UsuarioModel> todos() {
+    public CollectionModel<UsuarioModel> listar() {
 
         return usuarioModelAssembler.toCollectionModel(usuarioRepository.findAll());
     }
