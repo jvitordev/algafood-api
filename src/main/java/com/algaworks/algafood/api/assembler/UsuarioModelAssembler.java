@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api.assembier;
+package com.algaworks.algafood.api.assembler;
 
 import java.util.Collection;
 import java.util.List;

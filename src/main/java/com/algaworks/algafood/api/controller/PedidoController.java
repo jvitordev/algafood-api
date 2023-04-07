@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembier.PedidoInputDisassembler;
-import com.algaworks.algafood.api.assembier.PedidoModelAssembler;
-import com.algaworks.algafood.api.assembier.PedidoResumoModelAssembler;
+import com.algaworks.algafood.api.assembler.PedidoInputDisassembler;
+import com.algaworks.algafood.api.assembler.PedidoModelAssembler;
+import com.algaworks.algafood.api.assembler.PedidoResumoModelAssembler;
 import com.algaworks.algafood.api.model.PedidoModel;
 import com.algaworks.algafood.api.model.PedidoResumoModel;
 import com.algaworks.algafood.api.model.input.PedidoInput;

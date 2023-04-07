@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
-import com.algaworks.algafood.api.assembier.FormaPagamentoInputDisassembier;
-import com.algaworks.algafood.api.assembier.FormaPagamentoModelAssembler;
+import com.algaworks.algafood.api.assembler.FormaPagamentoInputDisassembler;
+import com.algaworks.algafood.api.assembler.FormaPagamentoModelAssembler;
 import com.algaworks.algafood.api.model.FormaPagamentoModel;
 import com.algaworks.algafood.api.model.input.FormaPagamentoInput;
 import com.algaworks.algafood.domain.model.FormaPagamento;
@@ -44,7 +44,7 @@ public class FormaPagamentoController {
     private FormaPagamentoModelAssembler formaPagamentoModelAssembier;
 
     @Autowired
-    private FormaPagamentoInputDisassembier formaPagamentoInputDisassembier;
+    private FormaPagamentoInputDisassembler formaPagamentoInputDisassembier;
 
     @GetMapping
     public ResponseEntity<List<FormaPagamentoModel>> todas(ServletWebRequest request) {

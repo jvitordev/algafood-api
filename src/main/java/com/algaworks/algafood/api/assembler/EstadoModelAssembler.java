@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api.assembier;
+package com.algaworks.algafood.api.assembler;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +11,7 @@ import com.algaworks.algafood.api.model.EstadoModel;
 import com.algaworks.algafood.domain.model.Estado;
 
 @Component
-public class EstadoModelAssembier {
+public class EstadoModelAssembler {
     
     @Autowired
     ModelMapper modelMapper;

@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api.assembier;
+package com.algaworks.algafood.api.assembler;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import com.algaworks.algafood.api.model.input.UsuarioInput;
 import com.algaworks.algafood.domain.model.Usuario;
 
 @Component
-public class UsuarioInputDisassembier {
+public class UsuarioInputDisassembler {
     
     @Autowired
 	ModelMapper modelMapper;

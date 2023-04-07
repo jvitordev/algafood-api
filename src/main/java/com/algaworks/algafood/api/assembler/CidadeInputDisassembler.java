@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api.assembier;
+package com.algaworks.algafood.api.assembler;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Estado;
 
 @Component
-public class CidadeInputDisassembier {
+public class CidadeInputDisassembler {
     
     @Autowired
 	ModelMapper modelMapper;

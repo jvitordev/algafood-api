@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembier.UsuarioInputDisassembier;
-import com.algaworks.algafood.api.assembier.UsuarioModelAssembler;
+import com.algaworks.algafood.api.assembler.UsuarioInputDisassembler;
+import com.algaworks.algafood.api.assembler.UsuarioModelAssembler;
 import com.algaworks.algafood.api.model.UsuarioModel;
 import com.algaworks.algafood.api.model.input.SenhaInput;
 import com.algaworks.algafood.api.model.input.UsuarioComSenhaInput;
@@ -37,7 +37,7 @@ public class UsuarioController {
     private CadastroUsuarioService cadastroUsuario;
 
     @Autowired
-    private UsuarioInputDisassembier usuarioInputDisassembler;
+    private UsuarioInputDisassembler usuarioInputDisassembler;
 
     @Autowired
     private UsuarioModelAssembler usuarioModelAssembler;

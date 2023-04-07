@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembier.CozinhaInputDisassembier;
-import com.algaworks.algafood.api.assembier.CozinhaModelAssembier;
+import com.algaworks.algafood.api.assembler.CozinhaInputDisassembler;
+import com.algaworks.algafood.api.assembler.CozinhaModelAssembler;
 import com.algaworks.algafood.api.model.CozinhaModel;
 import com.algaworks.algafood.api.model.input.CozinhaInput;
 import com.algaworks.algafood.domain.model.Cozinha;
@@ -39,10 +39,10 @@ public class CozinhaController {
     private CadastroCozinhaService cadastroCozinha;
 
     @Autowired
-    CozinhaModelAssembier cozinhaModelAssembier;
+    CozinhaModelAssembler cozinhaModelAssembier;
 
     @Autowired
-    CozinhaInputDisassembier cozinhaInputDisassembier;
+    CozinhaInputDisassembler cozinhaInputDisassembier;
 
     @GetMapping
     public Page<CozinhaModel> todas(@PageableDefault(size = 2) Pageable pageable) {

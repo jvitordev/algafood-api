@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.assembier.EstadoInputDisassembier;
-import com.algaworks.algafood.api.assembier.EstadoModelAssembier;
+import com.algaworks.algafood.api.assembler.EstadoInputDisassembler;
+import com.algaworks.algafood.api.assembler.EstadoModelAssembler;
 import com.algaworks.algafood.api.model.EstadoModel;
 import com.algaworks.algafood.api.model.input.EstadoInput;
 import com.algaworks.algafood.domain.model.Estado;
@@ -35,10 +35,10 @@ public class EstadoController {
     private CadastroEstadoService cadastroEstado;
 
     @Autowired
-    private EstadoInputDisassembier estadoInputDisassembier;
+    private EstadoInputDisassembler estadoInputDisassembier;
 
     @Autowired
-    private EstadoModelAssembier estadoModelAssembier;
+    private EstadoModelAssembler estadoModelAssembier;
 
     @GetMapping()
     public List<EstadoModel> todos() {
