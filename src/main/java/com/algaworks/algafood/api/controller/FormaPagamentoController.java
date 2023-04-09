@@ -41,13 +41,13 @@ public class FormaPagamentoController {
     CadastroFormaPagamentoService cadastroFormaPagamento;
 
     @Autowired
-    private FormaPagamentoModelAssembler formaPagamentoModelAssembier;
+    private FormaPagamentoModelAssembler formaPagamentoModelAssembler;
 
     @Autowired
-    private FormaPagamentoInputDisassembler formaPagamentoInputDisassembier;
+    private FormaPagamentoInputDisassembler formaPagamentoInputDisassembler;
 
     @GetMapping
-    public ResponseEntity<List<FormaPagamentoModel>> todas(ServletWebRequest request) {
+    public ResponseEntity<List<FormaPagamentoModel>> listar(ServletWebRequest request) {
         
         String eTag = deepEtag(request, null);
 		
@@ -57,7 +57,7 @@ public class FormaPagamentoController {
 
         List<FormaPagamento> todasFormasPagamentos = formaPagamentoRepository.findAll();
 
-        List<FormaPagamentoModel> formasPagamentosModel = formaPagamentoModelAssembier.toCollectionModel(todasFormasPagamentos);
+        List<FormaPagamentoModel> formasPagamentosModel = formaPagamentoModelAssembler.toCollectionModel(todasFormasPagamentos);
 
         return ResponseEntity.ok()
             .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
@@ -75,7 +75,7 @@ public class FormaPagamentoController {
 		}
 
         FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(id);
-        FormaPagamentoModel formaPagamentoModel = formaPagamentoModelAssembier.toModel(formaPagamento);
+        FormaPagamentoModel formaPagamentoModel = formaPagamentoModelAssembler.toModel(formaPagamento);
 
         return ResponseEntity.ok()
             .cacheControl(CacheControl.maxAge(15, TimeUnit.SECONDS))
@@ -87,9 +87,9 @@ public class FormaPagamentoController {
     @ResponseStatus(HttpStatus.CREATED)
     public FormaPagamentoModel adicionar(@RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
 
-        FormaPagamento formaPagamento = formaPagamentoInputDisassembier.toDomainObject(formaPagamentoInput);
+        FormaPagamento formaPagamento = formaPagamentoInputDisassembler.toDomainObject(formaPagamentoInput);
 
-        return formaPagamentoModelAssembier.toModel(cadastroFormaPagamento.salvar(formaPagamento));
+        return formaPagamentoModelAssembler.toModel(cadastroFormaPagamento.salvar(formaPagamento));
     }
 
     @PutMapping("{id}")
@@ -99,9 +99,9 @@ public class FormaPagamentoController {
 
         FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(id);
 
-        formaPagamentoInputDisassembier.copyToDomainModel(formaPagamentoInput, formaPagamento);
+        formaPagamentoInputDisassembler.copyToDomainModel(formaPagamentoInput, formaPagamento);
 
-        return formaPagamentoModelAssembier.toModel(cadastroFormaPagamento.salvar(formaPagamento));
+        return formaPagamentoModelAssembler.toModel(cadastroFormaPagamento.salvar(formaPagamento));
     }
 
     @DeleteMapping("{id}")

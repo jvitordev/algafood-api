@@ -1,13 +1,13 @@
 package com.algaworks.algafood.api.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,22 +38,25 @@ import com.algaworks.algafood.infrastructure.repository.spec.PedidoSpecs;
 public class PedidoController {
 
     @Autowired
-    PedidoRepository pedidoRepository;
+    private PedidoRepository pedidoRepository;
     
     @Autowired
     private EmissaoPedidoService emissaoPedido;
 
     @Autowired
-    PedidoModelAssembler pedidoModelAssembler;
+    private PedidoModelAssembler pedidoModelAssembler;
 
     @Autowired
     private PedidoInputDisassembler pedidoInputDisassembler;
 
     @Autowired
-    PedidoResumoModelAssembler pedidoResumoModelAssembler;
+    private PedidoResumoModelAssembler pedidoResumoModelAssembler;
+
+    @Autowired
+    private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
 
     @GetMapping
-	public Page<PedidoResumoModel> pesquisar(
+	public PagedModel<PedidoResumoModel> pesquisar(
         PedidoFilter filtro,
         @PageableDefault(size = 10) Pageable pageable) {
 
@@ -64,16 +67,10 @@ public class PedidoController {
             pageable
         );
 		
-        List<PedidoResumoModel> pedidoResumoModel = pedidoResumoModelAssembler
-        .toCollectionModel(pedidosPage.getContent());
+        PagedModel<PedidoResumoModel> pedidoResumoPagedModel = pagedResourcesAssembler
+        .toModel(pedidosPage, pedidoResumoModelAssembler);
 
-        Page<PedidoResumoModel> pedidoResumoModelPage = new PageImpl<>(
-            pedidoResumoModel,
-            pageable,
-            pedidosPage.getTotalElements()
-        );
-
-        return pedidoResumoModelPage;
+        return pedidoResumoPagedModel;
 	}
     
     @GetMapping("/{codigoPedido}")
