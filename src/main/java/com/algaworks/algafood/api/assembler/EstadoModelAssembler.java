@@ -16,7 +16,7 @@ public class EstadoModelAssembler extends RepresentationModelAssemblerSupport<Es
     
 	
 	@Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
 	@Autowired
 	private AlgaLinks algaLinks;
