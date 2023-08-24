@@ -11,7 +11,7 @@ import com.algaworks.algafood.domain.model.FormaPagamento;
 public class FormaPagamentoInputDisassembler {
     
     @Autowired
-	ModelMapper modelMapper;
+	private ModelMapper modelMapper;
 
     public FormaPagamento toDomainObject(FormaPagamentoInput formaPagamentoInput) {
         

@@ -11,7 +11,7 @@ import com.algaworks.algafood.domain.model.Produto;
 public class ProdutoInputDisassembler {
     
     @Autowired
-	ModelMapper modelMapper;
+	private ModelMapper modelMapper;
 
     public Produto toDomainObject(ProdutoInput produtoInput) {
         
