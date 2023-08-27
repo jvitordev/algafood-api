@@ -100,6 +100,14 @@ public class AlgaLinks {
 	public Link linkToGruposUsuario(Long usuarioId) {
 		return linkToGruposUsuario(usuarioId, IanaLinkRelations.SELF.value());
 	}
+	
+	public Link linkToGruposUsuarioAssociacao(Long usuarioId, String rel) {
+		return linkTo(methodOn(UsuarioGrupoController.class).associar(usuarioId, null)).withRel(rel);
+	}
+	
+	public Link linkToGruposUsuarioDesasociacao(Long usuarioId, Long grupoId, String rel) {
+		return linkTo(methodOn(UsuarioGrupoController.class).desassociar(usuarioId, grupoId)).withRel(rel);
+	}
 
 	public Link linkToGrupoPermissoes(Long grupoId, String rel) {
 		return linkTo(methodOn(GrupoPermissaoController.class).listar(grupoId)).withRel(rel);
