@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.AlgaLinks;
 import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
 import com.algaworks.algafood.domain.model.dto.VendaDiaria;
 import com.algaworks.algafood.domain.service.VendaQueryService;
@@ -25,10 +27,22 @@ public class EstatisticasController {
 
     @Autowired
     private VendaReportService vendaReportService;
+    
+    @Autowired
+    private AlgaLinks algaLinks;
+    
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public EstatisticasModel listar() {
+    	EstatisticasModel estatisticaModel = new EstatisticasModel();
+    	
+    	estatisticaModel.add(algaLinks.linkToEstatisticasVendasDiarias("vendas-diarias"));
+    	
+    	return estatisticaModel;
+	}
 
     @GetMapping("/vendas-diarias")
-    public List<VendaDiaria> consuVendasDiarias(
-        VendaDiariaFilter filter,
+    public List<VendaDiaria> consultarVendasDiarias(
+    	VendaDiariaFilter filter,
         @RequestParam(required = false, defaultValue = "+00:00") String timeOffset
     ) {
 
@@ -48,5 +62,8 @@ public class EstatisticasController {
 				.contentType(MediaType.APPLICATION_PDF)
 				.headers(headers)
 				.body(bytesPdf);
+	}
+	
+	private static class EstatisticasModel extends RepresentationModel<EstatisticasModel> {
 	}
 }
