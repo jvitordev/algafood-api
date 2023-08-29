@@ -8,6 +8,8 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.github.ziplet.filter.compression.CompressingFilter;
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -23,5 +25,10 @@ public class WebConfig implements WebMvcConfigurer {
         
         return new ShallowEtagHeaderFilter();
     }
+    
+    @Bean
+	public Filter compressingFilter() {
+		return new CompressingFilter();
+	}
     
 }
